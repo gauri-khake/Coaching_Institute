@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="CoachingService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Annotation Term="Core.Links">
+        <Collection>
+          <Record>
+            <PropertyValue Property="rel" String="author"/>
+            <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+          </Record>
+        </Collection>
+      </Annotation>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Students" EntityType="CoachingService.Students">
+          <NavigationPropertyBinding Path="branch" Target="Branches"/>
+          <NavigationPropertyBinding Path="to_enrollments" Target="Enrollments"/>
+        </EntitySet>
+        <EntitySet Name="Branches" EntityType="CoachingService.Branches">
+          <NavigationPropertyBinding Path="to_batches" Target="Batches"/>
+        </EntitySet>
+        <EntitySet Name="Batches" EntityType="CoachingService.Batches">
+          <NavigationPropertyBinding Path="branch" Target="Branches"/>
+          <NavigationPropertyBinding Path="course" Target="Courses"/>
+        </EntitySet>
+        <EntitySet Name="Enrollments" EntityType="CoachingService.Enrollments">
+          <NavigationPropertyBinding Path="student" Target="Students"/>
+          <NavigationPropertyBinding Path="batch" Target="Batches"/>
+          <NavigationPropertyBinding Path="to_payments" Target="FeePayments"/>
+        </EntitySet>
+        <EntitySet Name="Teachers" EntityType="CoachingService.Teachers">
+          <NavigationPropertyBinding Path="to_subjects" Target="TeacherSubjects"/>
+          <NavigationPropertyBinding Path="to_batches" Target="TeacherBatchAssignments"/>
+        </EntitySet>
+        <EntitySet Name="Courses" EntityType="CoachingService.Courses">
+          <NavigationPropertyBinding Path="to_batches" Target="Batches"/>
+        </EntitySet>
+        <EntitySet Name="Subjects" EntityType="CoachingService.Subjects"/>
+        <EntitySet Name="FeePayments" EntityType="CoachingService.FeePayments">
+          <NavigationPropertyBinding Path="enrollment" Target="Enrollments"/>
+        </EntitySet>
+        <EntitySet Name="TeacherSubjects" EntityType="CoachingService.TeacherSubjects">
+          <NavigationPropertyBinding Path="teacher" Target="Teachers"/>
+          <NavigationPropertyBinding Path="subject" Target="Subjects"/>
+        </EntitySet>
+        <EntitySet Name="TeacherBatchAssignments" EntityType="CoachingService.TeacherBatchAssignments">
+          <NavigationPropertyBinding Path="teacher" Target="Teachers"/>
+          <NavigationPropertyBinding Path="batch" Target="Batches"/>
+        </EntitySet>
+      </EntityContainer>
+      <EntityType Name="Students">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="admissionNo" Type="Edm.String" MaxLength="20"/>
+        <Property Name="fullName" Type="Edm.String" MaxLength="90"/>
+        <Property Name="phone" Type="Edm.String" MaxLength="15"/>
+        <Property Name="parentPhone" Type="Edm.String" MaxLength="15"/>
+        <NavigationProperty Name="branch" Type="CoachingService.Branches">
+          <ReferentialConstraint Property="branch_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="branch_ID" Type="Edm.Guid"/>
+        <NavigationProperty Name="to_enrollments" Type="Collection(CoachingService.Enrollments)" Partner="student">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Branches">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="branchCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="name" Type="Edm.String" MaxLength="80"/>
+        <Property Name="city" Type="Edm.String" MaxLength="60"/>
+        <Property Name="active" Type="Edm.Boolean" DefaultValue="true"/>
+        <NavigationProperty Name="to_batches" Type="Collection(CoachingService.Batches)" Partner="branch">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Batches">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="batchCode" Type="Edm.String" MaxLength="20"/>
+        <Property Name="startDate" Type="Edm.Date"/>
+        <Property Name="timing" Type="Edm.String" MaxLength="50"/>
+        <Property Name="maxStrength" Type="Edm.Int32" DefaultValue="60"/>
+        <NavigationProperty Name="branch" Type="CoachingService.Branches" Partner="to_batches">
+          <ReferentialConstraint Property="branch_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="branch_ID" Type="Edm.Guid"/>
+        <NavigationProperty Name="course" Type="CoachingService.Courses" Partner="to_batches">
+          <ReferentialConstraint Property="course_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="course_ID" Type="Edm.Guid"/>
+      </EntityType>
+      <EntityType Name="Enrollments">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="student" Type="CoachingService.Students" Partner="to_enrollments">
+          <ReferentialConstraint Property="student_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="student_ID" Type="Edm.Guid"/>
+        <NavigationProperty Name="batch" Type="CoachingService.Batches">
+          <ReferentialConstraint Property="batch_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="batch_ID" Type="Edm.Guid"/>
+        <Property Name="enrollDate" Type="Edm.Date"/>
+        <Property Name="totalFees" Type="Edm.Decimal" Precision="10" Scale="2"/>
+        <Property Name="finalFees" Type="Edm.Decimal" Precision="10" Scale="2"/>
+        <Property Name="status" Type="Edm.String" MaxLength="20" DefaultValue="active"/>
+        <NavigationProperty Name="to_payments" Type="Collection(CoachingService.FeePayments)" Partner="enrollment">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Teachers">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="empCode" Type="Edm.String" MaxLength="12"/>
+        <Property Name="fullName" Type="Edm.String" MaxLength="90"/>
+        <Property Name="phone" Type="Edm.String" MaxLength="15"/>
+        <Property Name="email" Type="Edm.String" MaxLength="120"/>
+        <Property Name="joiningDate" Type="Edm.Date"/>
+        <Property Name="active" Type="Edm.Boolean" DefaultValue="true"/>
+        <NavigationProperty Name="to_subjects" Type="Collection(CoachingService.TeacherSubjects)" Partner="teacher">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="to_batches" Type="Collection(CoachingService.TeacherBatchAssignments)" Partner="teacher">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Courses">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="courseCode" Type="Edm.String" MaxLength="12"/>
+        <Property Name="name" Type="Edm.String" MaxLength="100"/>
+        <Property Name="targetExam" Type="Edm.String" MaxLength="50"/>
+        <Property Name="durationMonths" Type="Edm.Int32"/>
+        <Property Name="totalFees" Type="Edm.Decimal" Precision="10" Scale="2"/>
+        <NavigationProperty Name="to_batches" Type="Collection(CoachingService.Batches)" Partner="course">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Subjects">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="code" Type="Edm.String" MaxLength="10"/>
+        <Property Name="name" Type="Edm.String" MaxLength="80"/>
+      </EntityType>
+      <EntityType Name="FeePayments">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="enrollment" Type="CoachingService.Enrollments" Partner="to_payments">
+          <ReferentialConstraint Property="enrollment_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="enrollment_ID" Type="Edm.Guid"/>
+        <Property Name="amount" Type="Edm.Decimal" Precision="10" Scale="2"/>
+        <Property Name="paymentDate" Type="Edm.Date"/>
+        <Property Name="mode" Type="Edm.String" MaxLength="30"/>
+        <Property Name="receiptNo" Type="Edm.String" MaxLength="20"/>
+      </EntityType>
+      <EntityType Name="TeacherSubjects">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="teacher" Type="CoachingService.Teachers" Partner="to_subjects">
+          <ReferentialConstraint Property="teacher_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="teacher_ID" Type="Edm.Guid"/>
+        <NavigationProperty Name="subject" Type="CoachingService.Subjects">
+          <ReferentialConstraint Property="subject_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="subject_ID" Type="Edm.Guid"/>
+      </EntityType>
+      <EntityType Name="TeacherBatchAssignments">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="teacher" Type="CoachingService.Teachers" Partner="to_batches">
+          <ReferentialConstraint Property="teacher_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="teacher_ID" Type="Edm.Guid"/>
+        <NavigationProperty Name="batch" Type="CoachingService.Batches">
+          <ReferentialConstraint Property="batch_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="batch_ID" Type="Edm.Guid"/>
+        <Property Name="role" Type="Edm.String" MaxLength="30" DefaultValue="main"/>
+        <Property Name="assignedOn" Type="Edm.Date"/>
+      </EntityType>
+      <Annotations Target="CoachingService.Students/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Students/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Students/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Students/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Students/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Branches/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Branches/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Branches/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Branches/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Branches/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Batches/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Batches/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Batches/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Batches/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Batches/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Enrollments/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Enrollments/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Enrollments/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Enrollments/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Enrollments/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Teachers/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Teachers/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Teachers/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Teachers/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Teachers/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Courses/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Courses/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Courses/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Courses/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Courses/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Subjects/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Subjects/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Subjects/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Subjects/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.Subjects/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.FeePayments/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.FeePayments/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.FeePayments/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.FeePayments/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.FeePayments/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherSubjects/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherSubjects/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherSubjects/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherSubjects/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherSubjects/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherBatchAssignments/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherBatchAssignments/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherBatchAssignments/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherBatchAssignments/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="CoachingService.TeacherBatchAssignments/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

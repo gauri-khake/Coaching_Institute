@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.asint</groupId>
+        <artifactId>coaching</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>coaching-srv</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Coaching Service Module</name>
+
+    <dependencies>
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- CAP OData + Runtime -->
+        <dependency>
+            <groupId>com.sap.cds</groupId>
+            <artifactId>cds-starter-spring-boot-odata</artifactId>
+        </dependency>
+
+        <!-- Core CAP API – REQUIRED for compiling generated sources -->
+        <dependency>
+            <groupId>com.sap.cds</groupId>
+            <artifactId>cds-services-api</artifactId>
+        </dependency>
+
+        <!-- H2 for local/dev -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.asint</groupId>
+            <artifactId>coaching</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Spring Boot -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- CDS Plugin – generates src/gen/java -->
+            <plugin>
+                <groupId>com.sap.cds</groupId>
+                <artifactId>cds-maven-plugin</artifactId>
+                <version>${cap.version}</version>
+                <extensions>true</extensions>
+
+                <executions>
+                    <execution>
+                        <id>cds-generate</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <codeOutputDirectory>${project.basedir}/src/gen</codeOutputDirectory>
+                    <basePackage>cds.gen</basePackage> <!-- Ensures clean package names -->
+                </configuration>
+            </plugin>
+
+            <!-- Compiler safety net -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

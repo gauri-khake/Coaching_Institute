@@ -1,0 +1,10 @@
+{
+  "name": "coaching",
+  "version": "1.0.0",
+  "dependencies": {
+    "@sap/cds": "^9.7.1"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^9.7.1"
+  }
+}

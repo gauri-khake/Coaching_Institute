@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.asint</groupId>
+	<artifactId>coaching</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Coaching - Parent</name>
+
+	<modules>
+		<module>db</module>
+		<module>srv</module>
+	</modules>
+
+	<properties>
+		<java.version>17</java.version>
+		<cap.version>3.8.0</cap.version>
+
+		<!-- Force modern Java settings (fixes source/target 5 error) -->
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.release>17</maven.compiler.release>
+
+		<!-- Use recent compiler plugin -->
+		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Spring Boot BOM -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>3.3.1</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- CAP BOM -->
+			<dependency>
+				<groupId>com.sap.cds</groupId>
+				<artifactId>cds-services-bom</artifactId>
+				<version>${cap.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- Force modern maven-compiler-plugin -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+					<configuration>
+						<release>${java.version}</release>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>

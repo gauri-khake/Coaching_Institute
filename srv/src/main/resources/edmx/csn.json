@@ -1,0 +1,3284 @@
+{
+  "namespace": "coaching",
+  "definitions": {
+    "coaching.Branches": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "branchCode": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 80
+        },
+        "city": {
+          "type": "cds.String",
+          "length": 60
+        },
+        "active": {
+          "type": "cds.Boolean",
+          "default": {
+            "val": true
+          }
+        },
+        "to_batches": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "coaching.Batches",
+          "on": [
+            {
+              "ref": [
+                "to_batches",
+                "branch"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "coaching.Courses": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "courseCode": {
+          "type": "cds.String",
+          "length": 12
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "targetExam": {
+          "type": "cds.String",
+          "length": 50
+        },
+        "durationMonths": {
+          "type": "cds.Integer"
+        },
+        "totalFees": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "to_batches": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "coaching.Batches",
+          "on": [
+            {
+              "ref": [
+                "to_batches",
+                "course"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "coaching.Subjects": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "code": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 80
+        }
+      }
+    },
+    "coaching.Batches": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "batchCode": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "startDate": {
+          "type": "cds.Date"
+        },
+        "timing": {
+          "type": "cds.String",
+          "length": 50
+        },
+        "maxStrength": {
+          "type": "cds.Integer",
+          "default": {
+            "val": 60
+          }
+        },
+        "branch": {
+          "type": "cds.Association",
+          "target": "coaching.Branches",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "branch_ID"
+            }
+          ]
+        },
+        "branch_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "branch"
+        },
+        "course": {
+          "type": "cds.Association",
+          "target": "coaching.Courses",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "course_ID"
+            }
+          ]
+        },
+        "course_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "course"
+        }
+      }
+    },
+    "coaching.Enrollments": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "student": {
+          "type": "cds.Association",
+          "target": "coaching.Students",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "student_ID"
+            }
+          ]
+        },
+        "student_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "student"
+        },
+        "batch": {
+          "type": "cds.Association",
+          "target": "coaching.Batches",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "batch_ID"
+            }
+          ]
+        },
+        "batch_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "batch"
+        },
+        "enrollDate": {
+          "type": "cds.Date"
+        },
+        "totalFees": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "finalFees": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "status": {
+          "type": "cds.String",
+          "length": 20,
+          "default": {
+            "val": "active"
+          }
+        },
+        "to_payments": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "coaching.FeePayments",
+          "on": [
+            {
+              "ref": [
+                "to_payments",
+                "enrollment"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "coaching.FeePayments": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "enrollment": {
+          "type": "cds.Association",
+          "target": "coaching.Enrollments",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "enrollment_ID"
+            }
+          ]
+        },
+        "enrollment_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "enrollment"
+        },
+        "amount": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "paymentDate": {
+          "type": "cds.Date"
+        },
+        "mode": {
+          "type": "cds.String",
+          "length": 30
+        },
+        "receiptNo": {
+          "type": "cds.String",
+          "length": 20
+        }
+      }
+    },
+    "coaching.Students": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "admissionNo": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "fullName": {
+          "type": "cds.String",
+          "length": 90
+        },
+        "phone": {
+          "type": "cds.String",
+          "length": 15
+        },
+        "parentPhone": {
+          "type": "cds.String",
+          "length": 15
+        },
+        "branch": {
+          "type": "cds.Association",
+          "target": "coaching.Branches",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "branch_ID"
+            }
+          ]
+        },
+        "branch_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "branch"
+        },
+        "to_enrollments": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "coaching.Enrollments",
+          "on": [
+            {
+              "ref": [
+                "to_enrollments",
+                "student"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "coaching.Teachers": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "empCode": {
+          "type": "cds.String",
+          "length": 12
+        },
+        "fullName": {
+          "type": "cds.String",
+          "length": 90
+        },
+        "phone": {
+          "type": "cds.String",
+          "length": 15
+        },
+        "email": {
+          "type": "cds.String",
+          "length": 120
+        },
+        "joiningDate": {
+          "type": "cds.Date"
+        },
+        "active": {
+          "type": "cds.Boolean",
+          "default": {
+            "val": true
+          }
+        },
+        "to_subjects": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "coaching.TeacherSubjects",
+          "on": [
+            {
+              "ref": [
+                "to_subjects",
+                "teacher"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "to_batches": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "coaching.TeacherBatchAssignments",
+          "on": [
+            {
+              "ref": [
+                "to_batches",
+                "teacher"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "coaching.TeacherSubjects": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "teacher": {
+          "type": "cds.Association",
+          "target": "coaching.Teachers",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "teacher_ID"
+            }
+          ]
+        },
+        "teacher_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "teacher"
+        },
+        "subject": {
+          "type": "cds.Association",
+          "target": "coaching.Subjects",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "subject_ID"
+            }
+          ]
+        },
+        "subject_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "subject"
+        }
+      }
+    },
+    "coaching.TeacherBatchAssignments": {
+      "kind": "entity",
+      "includes": [
+        "cuid",
+        "managed"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "teacher": {
+          "type": "cds.Association",
+          "target": "coaching.Teachers",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "teacher_ID"
+            }
+          ]
+        },
+        "teacher_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "teacher"
+        },
+        "batch": {
+          "type": "cds.Association",
+          "target": "coaching.Batches",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "batch_ID"
+            }
+          ]
+        },
+        "batch_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "batch"
+        },
+        "role": {
+          "type": "cds.String",
+          "length": 30,
+          "default": {
+            "val": "main"
+          }
+        },
+        "assignedOn": {
+          "type": "cds.Date"
+        }
+      }
+    },
+    "CoachingService": {
+      "@source": "coaching-lists.cds",
+      "kind": "service"
+    },
+    "CoachingService.Students": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "admissionNo": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "fullName": {
+          "type": "cds.String",
+          "length": 90
+        },
+        "phone": {
+          "type": "cds.String",
+          "length": 15
+        },
+        "parentPhone": {
+          "type": "cds.String",
+          "length": 15
+        },
+        "branch": {
+          "type": "cds.Association",
+          "target": "CoachingService.Branches",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "branch_ID"
+            }
+          ]
+        },
+        "branch_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "branch"
+        },
+        "to_enrollments": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "CoachingService.Enrollments",
+          "on": [
+            {
+              "ref": [
+                "to_enrollments",
+                "student"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.Students"
+          ]
+        }
+      }
+    },
+    "CoachingService.Branches": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "branchCode": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 80
+        },
+        "city": {
+          "type": "cds.String",
+          "length": 60
+        },
+        "active": {
+          "type": "cds.Boolean",
+          "default": {
+            "val": true
+          }
+        },
+        "to_batches": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "CoachingService.Batches",
+          "on": [
+            {
+              "ref": [
+                "to_batches",
+                "branch"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.Branches"
+          ]
+        }
+      }
+    },
+    "CoachingService.Batches": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "batchCode": {
+          "type": "cds.String",
+          "length": 20
+        },
+        "startDate": {
+          "type": "cds.Date"
+        },
+        "timing": {
+          "type": "cds.String",
+          "length": 50
+        },
+        "maxStrength": {
+          "type": "cds.Integer",
+          "default": {
+            "val": 60
+          }
+        },
+        "branch": {
+          "type": "cds.Association",
+          "target": "CoachingService.Branches",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "branch_ID"
+            }
+          ]
+        },
+        "branch_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "branch"
+        },
+        "course": {
+          "type": "cds.Association",
+          "target": "CoachingService.Courses",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "course_ID"
+            }
+          ]
+        },
+        "course_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "course"
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.Batches"
+          ]
+        }
+      }
+    },
+    "CoachingService.Enrollments": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "student": {
+          "type": "cds.Association",
+          "target": "CoachingService.Students",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "student_ID"
+            }
+          ]
+        },
+        "student_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "student"
+        },
+        "batch": {
+          "type": "cds.Association",
+          "target": "CoachingService.Batches",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "batch_ID"
+            }
+          ]
+        },
+        "batch_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "batch"
+        },
+        "enrollDate": {
+          "type": "cds.Date"
+        },
+        "totalFees": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "finalFees": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "status": {
+          "type": "cds.String",
+          "length": 20,
+          "default": {
+            "val": "active"
+          }
+        },
+        "to_payments": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "CoachingService.FeePayments",
+          "on": [
+            {
+              "ref": [
+                "to_payments",
+                "enrollment"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.Enrollments"
+          ]
+        }
+      }
+    },
+    "CoachingService.Teachers": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "empCode": {
+          "type": "cds.String",
+          "length": 12
+        },
+        "fullName": {
+          "type": "cds.String",
+          "length": 90
+        },
+        "phone": {
+          "type": "cds.String",
+          "length": 15
+        },
+        "email": {
+          "type": "cds.String",
+          "length": 120
+        },
+        "joiningDate": {
+          "type": "cds.Date"
+        },
+        "active": {
+          "type": "cds.Boolean",
+          "default": {
+            "val": true
+          }
+        },
+        "to_subjects": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "CoachingService.TeacherSubjects",
+          "on": [
+            {
+              "ref": [
+                "to_subjects",
+                "teacher"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "to_batches": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "CoachingService.TeacherBatchAssignments",
+          "on": [
+            {
+              "ref": [
+                "to_batches",
+                "teacher"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.Teachers"
+          ]
+        }
+      }
+    },
+    "CoachingService.Courses": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "courseCode": {
+          "type": "cds.String",
+          "length": 12
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "targetExam": {
+          "type": "cds.String",
+          "length": 50
+        },
+        "durationMonths": {
+          "type": "cds.Integer"
+        },
+        "totalFees": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "to_batches": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "CoachingService.Batches",
+          "on": [
+            {
+              "ref": [
+                "to_batches",
+                "course"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.Courses"
+          ]
+        }
+      }
+    },
+    "CoachingService.Subjects": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "code": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 80
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.Subjects"
+          ]
+        }
+      }
+    },
+    "CoachingService.FeePayments": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "enrollment": {
+          "type": "cds.Association",
+          "target": "CoachingService.Enrollments",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "enrollment_ID"
+            }
+          ]
+        },
+        "enrollment_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "enrollment"
+        },
+        "amount": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "paymentDate": {
+          "type": "cds.Date"
+        },
+        "mode": {
+          "type": "cds.String",
+          "length": 30
+        },
+        "receiptNo": {
+          "type": "cds.String",
+          "length": 20
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.FeePayments"
+          ]
+        }
+      }
+    },
+    "CoachingService.TeacherSubjects": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "teacher": {
+          "type": "cds.Association",
+          "target": "CoachingService.Teachers",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "teacher_ID"
+            }
+          ]
+        },
+        "teacher_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "teacher"
+        },
+        "subject": {
+          "type": "cds.Association",
+          "target": "CoachingService.Subjects",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "subject_ID"
+            }
+          ]
+        },
+        "subject_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "subject"
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.TeacherSubjects"
+          ]
+        }
+      }
+    },
+    "CoachingService.TeacherBatchAssignments": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "teacher": {
+          "type": "cds.Association",
+          "target": "CoachingService.Teachers",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "teacher_ID"
+            }
+          ]
+        },
+        "teacher_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "teacher"
+        },
+        "batch": {
+          "type": "cds.Association",
+          "target": "CoachingService.Batches",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ],
+              "$generatedFieldName": "batch_ID"
+            }
+          ]
+        },
+        "batch_ID": {
+          "type": "cds.UUID",
+          "@odata.foreignKey4": "batch"
+        },
+        "role": {
+          "type": "cds.String",
+          "length": 30,
+          "default": {
+            "val": "main"
+          }
+        },
+        "assignedOn": {
+          "type": "cds.Date"
+        }
+      },
+      "projection": {
+        "from": {
+          "ref": [
+            "coaching.TeacherBatchAssignments"
+          ]
+        }
+      }
+    },
+    "cds.outbox.Messages": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "timestamp": {
+          "type": "cds.Timestamp"
+        },
+        "target": {
+          "type": "cds.String"
+        },
+        "msg": {
+          "type": "cds.LargeString"
+        },
+        "attempts": {
+          "type": "cds.Integer",
+          "default": {
+            "val": 0
+          }
+        },
+        "partition": {
+          "type": "cds.Integer",
+          "default": {
+            "val": 0
+          }
+        },
+        "lastError": {
+          "type": "cds.LargeString"
+        },
+        "lastAttemptTimestamp": {
+          "type": "cds.Timestamp"
+        },
+        "status": {
+          "type": "cds.String",
+          "length": 23
+        },
+        "task": {
+          "type": "cds.String",
+          "length": 255
+        },
+        "appid": {
+          "type": "cds.String",
+          "length": 255
+        }
+      }
+    },
+    "Language": {
+      "kind": "type",
+      "@title": "{i18n>Language}",
+      "@description": "{i18n>LanguageCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Languages",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ],
+      "@Common.Label": "{i18n>Language}",
+      "@Core.Description": "{i18n>LanguageCode.Description}"
+    },
+    "Currency": {
+      "kind": "type",
+      "@title": "{i18n>Currency}",
+      "@description": "{i18n>CurrencyCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Currencies",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ],
+      "@Common.Label": "{i18n>Currency}",
+      "@Core.Description": "{i18n>CurrencyCode.Description}"
+    },
+    "Country": {
+      "kind": "type",
+      "@title": "{i18n>Country}",
+      "@description": "{i18n>CountryCode.Description}",
+      "type": "cds.Association",
+      "target": "sap.common.Countries",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ],
+      "@Common.Label": "{i18n>Country}",
+      "@Core.Description": "{i18n>CountryCode.Description}"
+    },
+    "Timezone": {
+      "kind": "type",
+      "type": "cds.Association",
+      "target": "sap.common.Timezones",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "sap.common": {
+      "kind": "context"
+    },
+    "sap.common.Locale": {
+      "kind": "type",
+      "@title": "{i18n>LanguageCode}",
+      "type": "cds.String",
+      "length": 14,
+      "@Common.Label": "{i18n>LanguageCode}"
+    },
+    "sap.common.Languages": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255,
+          "@Common.Label": "{i18n>Name}"
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000,
+          "@Common.Label": "{i18n>Description}"
+        },
+        "code": {
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14,
+          "@Common.Label": "{i18n>LanguageCode}"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Languages.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      },
+      "$localized": true
+    },
+    "sap.common.Countries": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255,
+          "@Common.Label": "{i18n>Name}"
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000,
+          "@Common.Label": "{i18n>Description}"
+        },
+        "code": {
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3,
+          "@Common.Label": "{i18n>CountryCode}"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Countries.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      },
+      "$localized": true
+    },
+    "sap.common.Currencies": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255,
+          "@Common.Label": "{i18n>Name}"
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000,
+          "@Common.Label": "{i18n>Description}"
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3,
+          "@Common.Label": "{i18n>CurrencyCode}"
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5,
+          "@Common.Label": "{i18n>CurrencySymbol}"
+        },
+        "minorUnit": {
+          "@title": "{i18n>CurrencyMinorUnit}",
+          "type": "cds.Int16",
+          "@Common.Label": "{i18n>CurrencyMinorUnit}"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Currencies.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      },
+      "$localized": true
+    },
+    "sap.common.Timezones": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255,
+          "@Common.Label": "{i18n>Name}"
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000,
+          "@Common.Label": "{i18n>Description}"
+        },
+        "code": {
+          "@title": "{i18n>TimeZoneCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 100,
+          "@Common.Label": "{i18n>TimeZoneCode}"
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Timezones.texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Timezones.texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      },
+      "$localized": true
+    },
+    "sap.common.CodeList": {
+      "kind": "aspect",
+      "@cds.autoexpose": true,
+      "@cds.persistence.skip": "if-unused",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.odata.valuelist": true,
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255,
+          "@Common.Label": "{i18n>Name}"
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000,
+          "@Common.Label": "{i18n>Description}"
+        }
+      }
+    },
+    "sap.common.TextsAspect": {
+      "kind": "aspect",
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14,
+          "@Common.Label": "{i18n>LanguageCode}"
+        }
+      }
+    },
+    "sap.common.FlowHistory": {
+      "kind": "aspect",
+      "@cds.persistence.skip": "if-unused",
+      "elements": {
+        "transitions_": {
+          "@odata.draft.enabled": false,
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "targetAspect": {
+            "elements": {
+              "timestamp": {
+                "@cds.on.insert": {
+                  "=": "$now"
+                },
+                "@UI.HiddenFilter": true,
+                "@UI.ExcludeFromNavigationContext": true,
+                "@Core.Immutable": true,
+                "@title": "{i18n>CreatedAt}",
+                "@readonly": true,
+                "key": true,
+                "type": {
+                  "ref": [
+                    "managed",
+                    "createdAt"
+                  ]
+                }
+              },
+              "user": {
+                "@cds.on.insert": {
+                  "=": "$user"
+                },
+                "@UI.HiddenFilter": true,
+                "@UI.ExcludeFromNavigationContext": true,
+                "@Core.Immutable": true,
+                "@title": "{i18n>CreatedBy}",
+                "@readonly": true,
+                "@description": "{i18n>UserID.Description}",
+                "type": {
+                  "ref": [
+                    "managed",
+                    "createdBy"
+                  ]
+                },
+                "length": 255
+              },
+              "status": {
+                "type": "cds.String"
+              },
+              "comment": {
+                "type": "cds.String"
+              }
+            }
+          }
+        }
+      }
+    },
+    "cuid": {
+      "kind": "aspect",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        }
+      }
+    },
+    "managed": {
+      "kind": "aspect",
+      "elements": {
+        "createdAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedAt}"
+        },
+        "createdBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@Core.Immutable": true,
+          "@title": "{i18n>CreatedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>CreatedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        },
+        "modifiedAt": {
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedAt}",
+          "@readonly": true,
+          "type": "cds.Timestamp",
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedAt}"
+        },
+        "modifiedBy": {
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@UI.HiddenFilter": true,
+          "@UI.ExcludeFromNavigationContext": true,
+          "@title": "{i18n>ChangedBy}",
+          "@readonly": true,
+          "@description": "{i18n>UserID.Description}",
+          "type": "cds.String",
+          "length": 255,
+          "@Core.Computed": true,
+          "@Common.Label": "{i18n>ChangedBy}",
+          "@Core.Description": "{i18n>UserID.Description}"
+        }
+      }
+    },
+    "temporal": {
+      "kind": "aspect",
+      "elements": {
+        "validFrom": {
+          "@cds.valid.from": true,
+          "type": "cds.Timestamp"
+        },
+        "validTo": {
+          "@cds.valid.to": true,
+          "type": "cds.Timestamp"
+        }
+      }
+    },
+    "User": {
+      "kind": "type",
+      "@title": "{i18n>UserID}",
+      "@description": "{i18n>UserID.Description}",
+      "type": "cds.String",
+      "length": 255,
+      "@Common.Label": "{i18n>UserID}",
+      "@Core.Description": "{i18n>UserID.Description}"
+    },
+    "sap.common.Languages.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14,
+          "@Common.Label": "{i18n>LanguageCode}"
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255,
+          "@Common.Label": "{i18n>Name}"
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000,
+          "@Common.Label": "{i18n>Description}"
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14,
+          "@Common.Label": "{i18n>LanguageCode}"
+        }
+      }
+    },
+    "sap.common.Countries.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14,
+          "@Common.Label": "{i18n>LanguageCode}"
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255,
+          "@Common.Label": "{i18n>Name}"
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000,
+          "@Common.Label": "{i18n>Description}"
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3,
+          "@Common.Label": "{i18n>CountryCode}"
+        }
+      }
+    },
+    "sap.common.Currencies.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14,
+          "@Common.Label": "{i18n>LanguageCode}"
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255,
+          "@Common.Label": "{i18n>Name}"
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000,
+          "@Common.Label": "{i18n>Description}"
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3,
+          "@Common.Label": "{i18n>CurrencyCode}"
+        }
+      }
+    },
+    "sap.common.Timezones.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14,
+          "@Common.Label": "{i18n>LanguageCode}"
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255,
+          "@Common.Label": "{i18n>Name}"
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000,
+          "@Common.Label": "{i18n>Description}"
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>TimeZoneCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 100,
+          "@Common.Label": "{i18n>TimeZoneCode}"
+        }
+      }
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v6.7.2",
+    "flavor": "inferred"
+  },
+  "$version": "2.0"
+}
