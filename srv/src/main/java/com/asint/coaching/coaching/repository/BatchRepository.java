@@ -1,12 +1,12 @@
 package com.asint.coaching.coaching.repository;
 
 import cds.gen.coaching.Batches;
-import cds.gen.coaching.Batches_;
 import com.sap.cds.ql.Update;
+import com.sap.cds.ql.cqn.CqnUpdate;
 import com.sap.cds.services.persistence.PersistenceService;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+@Repository
 public class BatchRepository {
     private final PersistenceService db;
 
@@ -14,16 +14,10 @@ public class BatchRepository {
         this.db = db;
     }
 
-    public void updateBatchTiming(List<Batches> batches) {
-
-        for (Batches batch : batches) {
-            if (batch.getTiming() != null) {
-                db.run(
-                        Update.entity(Batches_.CDS_NAME)
-                                .data("timing", batch.getTiming())
-                                .byId(batch.getId())
-                );
-            }
-        }
+    public void updateBatch(Batches batch) {
+        CqnUpdate update = Update.entity("CoachingService.Batches")
+                .data(batch)
+                .where(b -> b.get("ID").eq(batch.getId()));
+        db.run(update);
     }
 }

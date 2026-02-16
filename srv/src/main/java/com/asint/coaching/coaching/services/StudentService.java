@@ -1,13 +1,14 @@
 package com.asint.coaching.coaching.services;
 
-
 import cds.gen.coaching.Students;
-import cds.gen.coaching.Students_;
 import com.asint.coaching.coaching.repository.StudentRepository;
 import com.sap.cds.ql.Insert;
+import com.sap.cds.ql.cqn.CqnDelete;
+import com.sap.cds.ql.cqn.CqnInsert;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsCreateEventContext;
+import com.sap.cds.services.cds.CdsDeleteEventContext;
 import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
@@ -17,10 +18,9 @@ import com.sap.cds.services.persistence.PersistenceService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @Component
-@ServiceName("StudentService")
+@ServiceName("CoachingService")
 public class StudentService implements EventHandler {
 
     private final PersistenceService db;
@@ -31,62 +31,39 @@ public class StudentService implements EventHandler {
         this.studentRepository = studentRepository;
     }
 
-    @Before(event = CqnService.EVENT_CREATE, entity = "StudentService.Students")
-    public void validateAndDefaultStudents(List<Students> students) {
-
-        if (students == null || students.isEmpty()) {
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "No students provided in batch");
-        }
-
+    @Before(event = CqnService.EVENT_CREATE, entity = "CoachingService.Students")
+    public void beforeCreateStudent(List<Students> students) {
         for (Students student : students) {
-            String admissionNo = student.getAdmissionNo();
-            if (admissionNo == null || admissionNo.trim().isEmpty()) {
-                throw new ServiceException(ErrorStatuses.BAD_REQUEST,
-                        "Admission number is required for student: " + student.getFullName());
-            }
-
             if (student.getFullName() == null || student.getFullName().trim().isEmpty()) {
                 throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Full name is required");
             }
+
+            if (student.getPhone() == null || student.getPhone().trim().isEmpty()) {
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Phone number is required");
+            }
         }
     }
 
-    @On(event = CqnService.EVENT_CREATE, entity = "StudentService.Students")
-    public void onCreateStudents(CdsCreateEventContext context) {
-        List<Map<String, Object>> students = context.getCqn().entries();
-
-        if (students == null || students.isEmpty()) {
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "No students provided in batch");
-        }
-
-        for (Map<String, Object> student : students) {
-            String admissionNo = (String) student.get("admissionNo");
-            if (admissionNo == null || admissionNo.trim().isEmpty()) {
-                String fullName = (String) student.get("fullName");
-                throw new ServiceException(ErrorStatuses.BAD_REQUEST,
-                        "Admission number is required for student: " +
-                                (fullName != null ? fullName : "unknown"));
-            }
-
-            String fullName = (String) student.get("fullName");
-            if (fullName == null || fullName.trim().isEmpty()) {
-                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Full name is required");
-            }
-        }
-
-        db.run(Insert.into(Students_.CDS_NAME).entries(students));
+    @On(event = CqnService.EVENT_CREATE, entity = "CoachingService.Students")
+    public void onCreateStudent(List<Students> students, CdsCreateEventContext context) {
+        CqnInsert insert = Insert.into("CoachingService.Students").entries(students);
+        db.run(insert);
 
         context.setResult(students);
+        context.setCompleted();
     }
 
-    @On(event = CqnService.EVENT_DELETE, entity = "StudentService.deleteStudents")
-    public Boolean deleteStudents(Map<String, Object> payload) {
+    @Before(event = CqnService.EVENT_DELETE, entity = "CoachingService.Students")
+    public void beforeDeleteStudent(CdsDeleteEventContext context) {
+        System.out.println("Before delete students");
+    }
 
-        List<String> studentIds = (List<String>) payload.get("studentIds");
+    @On(event = CqnService.EVENT_DELETE, entity = "CoachingService.Students")
+    public void onDeleteStudent(CdsDeleteEventContext context) {
+        CqnDelete delete = context.getCqn();
+        db.run(delete);
 
-        studentRepository.deleteStudents(studentIds);
-
-        return true;
-
+        context.setCompleted();
+        System.out.println("Students deleted successfully");
     }
 }

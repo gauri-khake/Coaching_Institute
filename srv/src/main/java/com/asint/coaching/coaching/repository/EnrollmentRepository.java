@@ -1,6 +1,6 @@
 package com.asint.coaching.coaching.repository;
 
-import cds.gen.coaching.Enrollments_;
+import cds.gen.coaching.Enrollments;
 import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.cqn.CqnSelect;
@@ -8,8 +8,6 @@ import com.sap.cds.services.persistence.PersistenceService;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
 public class EnrollmentRepository {
@@ -20,20 +18,12 @@ public class EnrollmentRepository {
         this.db = db;
     }
 
-    public List<Map<String, Object>> readEnrollmentsWithPayments(List<String> studentIds) {
-
-        if (studentIds == null || studentIds.isEmpty()) {
-            return List.of();
-        }
-
-        CqnSelect select = Select.from("coaching.Enrollments")
+    public List<Enrollments> getEnrollmentsWithPaymentsByStudentIds(List<String> studentIds) {
+        CqnSelect query = Select.from("CoachingService.Enrollments")
                 .where(e -> e.get("student_ID").in(studentIds));
 
-        Result result = db.run(select);
-
-        return result.listOf(Map.class)
-                .stream()
-                .map(m -> (Map<String, Object>) m)
-                .collect(Collectors.toList());
+        Result result = db.run(query);
+        return result.listOf(Enrollments.class);
     }
 }
+

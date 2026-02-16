@@ -11,4 +11,21 @@ service CoachingService {
     entity FeePayments as projection on db.FeePayments;
     entity TeacherSubjects as projection on db.TeacherSubjects;
     entity TeacherBatchAssignments as projection on db.TeacherBatchAssignments;
+
+action bulkInsertStudents(students : array of {
+        admissionNo: String;
+        fullName: String;
+        phone: String;
+        parentPhone: String;
+        branch_ID: String;
+    });
+
+    action bulkUpdateStudents(students : array of {
+        ID: String;
+        admissionNo: String;
+        fullName: String;
+        phone: String;
+        parentPhone: String;
+        branch_ID: String;
+    });
 }
