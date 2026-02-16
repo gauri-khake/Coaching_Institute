@@ -15,18 +15,16 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@ServiceName("CoachingService")
+@ServiceName("EnrollmentService")
 public class EnrollmentService implements EventHandler {
 
-    private final PersistenceService db;
     private final EnrollmentRepository enrollmentRepository;
 
-    public EnrollmentService(PersistenceService db, EnrollmentRepository enrollmentRepository) {
-        this.db = db;
+    public EnrollmentService(EnrollmentRepository enrollmentRepository) {
         this.enrollmentRepository = enrollmentRepository;
     }
 
-    @On(event = CqnService.EVENT_READ, entity = "CoachingService.Enrollments")
+    @On(event = CqnService.EVENT_READ, entity = "EnrollmentService.Enrollments")
     public void onReadEnrollments(CdsReadEventContext context) {
         CqnSelect query = context.getCqn();
 

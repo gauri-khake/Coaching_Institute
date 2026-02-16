@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@ServiceName("CoachingService")
+@ServiceName("StudentService")
 public class StudentService implements EventHandler {
 
     private final PersistenceService db;
@@ -31,7 +31,7 @@ public class StudentService implements EventHandler {
         this.studentRepository = studentRepository;
     }
 
-    @Before(event = CqnService.EVENT_CREATE, entity = "CoachingService.Students")
+    @Before(event = CqnService.EVENT_CREATE, entity = "StudentService.Students")
     public void beforeCreateStudent(List<Students> students) {
         for (Students student : students) {
             if (student.getFullName() == null || student.getFullName().trim().isEmpty()) {
@@ -44,21 +44,21 @@ public class StudentService implements EventHandler {
         }
     }
 
-    @On(event = CqnService.EVENT_CREATE, entity = "CoachingService.Students")
+    @On(event = CqnService.EVENT_CREATE, entity = "StudentService.Students")
     public void onCreateStudent(List<Students> students, CdsCreateEventContext context) {
-        CqnInsert insert = Insert.into("CoachingService.Students").entries(students);
+        CqnInsert insert = Insert.into("StudentService.Students").entries(students);
         db.run(insert);
 
         context.setResult(students);
         context.setCompleted();
     }
 
-    @Before(event = CqnService.EVENT_DELETE, entity = "CoachingService.Students")
+    @Before(event = CqnService.EVENT_DELETE, entity = "StudentService.Students")
     public void beforeDeleteStudent(CdsDeleteEventContext context) {
         System.out.println("Before delete students");
     }
 
-    @On(event = CqnService.EVENT_DELETE, entity = "CoachingService.Students")
+    @On(event = CqnService.EVENT_DELETE, entity = "StudentService.Students")
     public void onDeleteStudent(CdsDeleteEventContext context) {
         CqnDelete delete = context.getCqn();
         db.run(delete);

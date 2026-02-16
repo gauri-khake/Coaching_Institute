@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 @Component
-@ServiceName("CoachingService")
+@ServiceName("StudentService")
 public class BulkServices implements EventHandler {
 
     private static final Logger log = LoggerFactory.getLogger(BulkServices.class);

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@ServiceName("CoachingService")
+@ServiceName("BatchService")
 public class BatchService implements EventHandler {
 
     private final PersistenceService db;
@@ -28,7 +28,7 @@ public class BatchService implements EventHandler {
         this.batchRepository = batchRepository;
     }
 
-    @Before(event = CqnService.EVENT_UPDATE, entity = "CoachingService.Batches")
+    @Before(event = CqnService.EVENT_UPDATE, entity = "BatchService.Batches")
     public void beforeUpdateBatch(List<Batches> batches) {
         for (Batches batch : batches) {
             if (batch.getBatchCode() != null && batch.getBatchCode().trim().isEmpty()) {
@@ -41,7 +41,7 @@ public class BatchService implements EventHandler {
         }
     }
 
-    @On(event = CqnService.EVENT_UPDATE, entity = "CoachingService.Batches")
+    @On(event = CqnService.EVENT_UPDATE, entity = "BatchService.Batches")
     public void onUpdateBatch(List<Batches> batches, CdsUpdateEventContext context) {
         for (Batches batch : batches) {
             batchRepository.updateBatch(batch);
