@@ -30,11 +30,8 @@ public class BulkServices implements EventHandler {
         this.studentRepository = studentRepository;
     }
 
-    @On
+    @On(event = "bulkInsertStudents")
     public void bulkInsertStudents(EventContext context) {
-        if (!"bulkInsertStudents".equals(context.getEvent())) {
-            return;
-        }
         String jobId = UUID.randomUUID().toString();
 
         @SuppressWarnings("unchecked")
@@ -59,13 +56,12 @@ public class BulkServices implements EventHandler {
         context.put("status", "ACCEPTED");
         context.put("message", "Inserting " + studentsList.size() + " records in background");
         context.put("totalRecords", studentsList.size());
+
+        context.setCompleted();
     }
 
-    @On
+    @On(event = "bulkUpdateStudents")
     public void bulkUpdateStudents(EventContext context) {
-        if (!"bulkUpdateStudents".equals(context.getEvent())) {
-            return;
-        }
         String jobId = UUID.randomUUID().toString();
 
         @SuppressWarnings("unchecked")
@@ -100,6 +96,8 @@ public class BulkServices implements EventHandler {
         context.put("status", "ACCEPTED");
         context.put("message", "Updating " + studentsList.size() + " records in background");
         context.put("totalRecords", studentsList.size());
+
+        context.setCompleted();
     }
 
     @Async

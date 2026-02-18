@@ -17,25 +17,25 @@
     <name>Coaching Service Module</name>
 
     <dependencies>
-        <!-- Spring Boot -->
+        <!-- Spring Boot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- CAP OData + Runtime -->
+        <!-- CAP OData + Runtime (this already includes cds-starter-spring-boot, remove duplicate) -->
         <dependency>
             <groupId>com.sap.cds</groupId>
             <artifactId>cds-starter-spring-boot-odata</artifactId>
         </dependency>
 
-        <!-- Core CAP API – REQUIRED for compiling generated sources -->
+        <!-- Core CAP API -->
         <dependency>
             <groupId>com.sap.cds</groupId>
             <artifactId>cds-services-api</artifactId>
         </dependency>
 
-        <!-- H2 for local/dev -->
+        <!-- H2 Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -52,20 +52,21 @@
 
     <build>
         <plugins>
-            <!-- Spring Boot -->
+            <!-- Spring Boot Plugin — version must be explicit -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.3.2</version>
             </plugin>
 
-            <!-- CDS Plugin – generates src/gen/java -->
+            <!-- CDS Maven Plugin -->
             <plugin>
                 <groupId>com.sap.cds</groupId>
                 <artifactId>cds-maven-plugin</artifactId>
                 <version>${cap.version}</version>
                 <extensions>true</extensions>
-
                 <executions>
+                    <!-- Generate Java classes from CDS model -->
                     <execution>
                         <id>cds-generate</id>
                         <phase>generate-sources</phase>
@@ -74,14 +75,13 @@
                         </goals>
                     </execution>
                 </executions>
-
                 <configuration>
                     <codeOutputDirectory>${project.basedir}/src/gen</codeOutputDirectory>
-                    <basePackage>cds.gen</basePackage> <!-- Ensures clean package names -->
+                    <basePackage>cds.gen</basePackage>
                 </configuration>
             </plugin>
 
-            <!-- Compiler safety net -->
+            <!-- Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
